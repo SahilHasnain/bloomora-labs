@@ -1,0 +1,4 @@
+.playwright-mcp/
+.code-review-graph/
+*.png
+server.log
