@@ -3,3 +3,5 @@
 *.png
 server.log
 advertising/
+youtube/.env.local
+youtube/node_modules/

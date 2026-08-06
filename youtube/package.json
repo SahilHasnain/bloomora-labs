@@ -1,0 +1,14 @@
+{
+  "name": "bloomora-youtube-upload",
+  "version": "1.0.0",
+  "description": "YouTube upload logic for Bloomora Labs ads",
+  "main": "upload.js",
+  "scripts": {
+    "upload": "node upload.js"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "googleapis": "^173.0.0"
+  }
+}
