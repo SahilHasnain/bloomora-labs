@@ -15,6 +15,7 @@ const AD_DIR = path.join(__dirname, "..", "advertising");
 const ADS = {
   "bloomora-intro": {
     video: path.join(AD_DIR, "bloomora-intro", "out", "bloomora-intro.mp4"),
+    short: path.join(AD_DIR, "bloomora-intro", "out", "bloomora-intro-short.mp4"),
     title: "Bloomora Labs — Learning tools, made simple.",
     description: `Three products, one mission: learning should be simple, accessible, and empowering.
 
@@ -24,9 +25,21 @@ NeuroPrep 🧠 — a learning app that saves you from forgetfulness
 
 Bloomora Labs → https://sahilhasnain.github.io/bloomora-labs/`,
     tags: ["Bloomora Labs", "EdTech", "Learning", "Startup", "Coming Soon"],
+    shortTitle: "Meet Bloomora Labs – TinyLearn, NearBook & NeuroPrep #shorts",
+    shortDescription: `Learning should be simple, accessible, and empowering. Meet our first three products:
+
+TinyLearn 🎯 – focused learning, built around quality
+NearBook 📚 – pre-loved books for NEET students
+NeuroPrep 🧠 – a learning app that saves you from forgetfulness
+
+Bloomora Labs → https://sahilhasnain.github.io/bloomora-labs/
+
+#BloomoraLabs #Shorts #EdTech #Learning #Startup`,
+    shortTags: ["Bloomora Labs", "EdTech", "Shorts", "Learning", "Startup"],
   },
   tinylearn: {
     video: path.join(AD_DIR, "tinylearn", "out", "tinylearn.mp4"),
+    short: path.join(AD_DIR, "tinylearn", "out", "tinylearn-short.mp4"),
     title: "TinyLearn — Your feed is full. Your focus isn't. 🎯",
     description: `Your feed is full. Your focus isn't.
 
@@ -36,9 +49,19 @@ Learn small. Retain more. Show up daily. 🎯
 
 Join the waitlist → https://sahilhasnain.github.io/ai-learning/`,
     tags: ["TinyLearn", "Learning App", "Focused Learning", "Study Tips", "Bloomora Labs"],
+    shortTitle: "Learn Small, Retain More – TinyLearn Makes Focused Learning Easy #shorts",
+    shortDescription: `Can't focus while studying? TinyLearn keeps learning small, focused, and built around quality — one bite-sized lesson at a time.
+
+Learn small. Retain more. Show up daily. 🎯
+
+Join the waitlist → https://sahilhasnain.github.io/ai-learning/
+
+#TinyLearn #Shorts #FocusedLearning #StudyTips #LearnSmart`,
+    shortTags: ["TinyLearn", "Focused Learning", "Shorts", "Study Tips", "Learning App"],
   },
   nearbook: {
     video: path.join(AD_DIR, "nearbook", "out", "nearbook.mp4"),
+    short: path.join(AD_DIR, "nearbook", "out", "nearbook-short.mp4"),
     title: "NearBook — Good books shouldn't cost a fortune. 📚",
     description: `Good books shouldn't cost a fortune.
 
@@ -48,6 +71,15 @@ Save money. Earn back. Study better. 📚
 
 Join the waitlist → https://sahilhasnain.github.io/nearbook/`,
     tags: ["NearBook", "NEET Prep", "Pre-loved Books", "Study Smart", "Bloomora Labs"],
+    shortTitle: "Save Money on NEET Books with NearBook #shorts",
+    shortDescription: `NEET prep is expensive — your books shouldn't be. NearBook helps NEET students buy and sell pre-loved books near you.
+
+Pay less. Earn back. Study better. 📚
+
+Join the waitlist → https://sahilhasnain.github.io/nearbook/
+
+#NearBook #Shorts #NEETPrep #StudySmart #PreLovedBooks`,
+    shortTags: ["NearBook", "NEET Prep", "Shorts", "Study Smart", "Pre-Loved Books"],
   },
 };
 
@@ -127,7 +159,7 @@ if (require.main === module) {
   const [ad, ...flags] = process.argv.slice(2);
 
   if (!ad || !ADS[ad]) {
-    console.error(`Usage: node upload.js <ad> [--title ...] [--description ...] [--tags a,b,c] [--privacy public|unlisted|private] [--thumbnail path]\n`);
+    console.error(`Usage: node upload.js <ad> [--shorts] [--title ...] [--description ...] [--tags a,b,c] [--privacy public|unlisted|private] [--thumbnail path]\n`);
     console.error(`Available ads: ${Object.keys(ADS).join(", ")}`);
     process.exit(1);
   }
@@ -137,8 +169,9 @@ if (require.main === module) {
     const i = flags.indexOf(name);
     return i !== -1 ? flags[i + 1] : undefined;
   };
+  const shorts = flags.includes("--shorts");
 
-  const videoPath = getFlag("--video") || preset.video;
+  const videoPath = getFlag("--video") || (shorts ? preset.short : preset.video);
   if (!fs.existsSync(videoPath)) {
     console.error(`Video not found: ${videoPath}\nBuild it first with node render.mjs && python build.py in advertising/${ad}`);
     process.exit(1);
@@ -146,9 +179,9 @@ if (require.main === module) {
 
   uploadWithThumbnail({
     videoPath,
-    title: getFlag("--title") || preset.title,
-    description: getFlag("--description") || preset.description,
-    tags: (getFlag("--tags") || "").split(",").filter(Boolean).concat(preset.tags),
+    title: getFlag("--title") || (shorts ? preset.shortTitle : preset.title),
+    description: getFlag("--description") || (shorts ? preset.shortDescription : preset.description),
+    tags: (getFlag("--tags") || "").split(",").filter(Boolean).concat(shorts ? preset.shortTags : preset.tags),
     privacy: getFlag("--privacy") || "unlisted",
     thumbPath: getFlag("--thumbnail"),
   })
